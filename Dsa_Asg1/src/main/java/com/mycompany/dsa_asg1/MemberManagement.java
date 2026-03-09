@@ -10,6 +10,8 @@ import java.time.Period;
 import java.time.format.DateTimeParseException;
 
 public class MemberManagement {
+    
+    
     private Scanner scanner = new Scanner(System.in);
     private LinkedList<Member> memberList = new LinkedList<>();
     
@@ -44,7 +46,102 @@ public class MemberManagement {
             }
             
         } while (memberId.isEmpty() || duplicate);
+        
+        
+        do {
+            System.out.print("Enter Member Name: ");
+            name = scanner.nextLine().trim();
+            
+            if (name.isEmpty()) {
+            System.out.println("Name cannot be empty.");
+            }
+        } while (name.isEmpty());
+        
+    // Date of Birth + Age - Still need to add the validation here!!!!
+    do {
+        System.out.print("Enter Date of Birth (yyyy-MM-dd): ");
+        dateOfBirth = scanner.nextLine().trim();
 
+        age = calculateAge(dateOfBirth);
+
+        if (age == -1) {
+            System.out.println("Invalid date of birth.");
+            System.out.println("Please use yyyy-MM-dd and ensure it is not a future date.");
+        }
+    } while (age == -1);
+    
+    
+    // Gender
+    do {
+        System.out.print("Enter Gender (Male/Female): ");
+        gender = scanner.nextLine().trim();
+
+        if (!isValidGender(gender)) {
+            System.out.println("Invalid gender. Please enter Male or Female.");
+        }
+    } while (!isValidGender(gender));
+    
+    // Contact Number
+    do {
+        System.out.print("Enter Contact Number: ");
+        contactNumber = scanner.nextLine().trim();
+
+        if (!isValidContactNumber(contactNumber)) {
+            System.out.println("Invalid contact number format.");
+            System.out.println("Examples:");
+            System.out.println("Mobile: 0123456789 / 012-3456789 / 01123456789 / 011-23456789");
+            System.out.println("Landline: 03-12345678 / 0312345678 / 082-123456 / 082123456");
+        }
+    } while (!isValidContactNumber(contactNumber));
+    
+    // Address
+    do {
+        System.out.print("Enter Address: ");
+        address = scanner.nextLine().trim();
+
+        if (!isValidAddress(address)) {
+            System.out.println("Address cannot be empty.");
+        }
+    } while (!isValidAddress(address));
+    
+    // Membership Level
+    do {
+        System.out.print("Enter Membership Level (Gold/Platinum/Diamond): ");
+        membershipLevel = scanner.nextLine().trim();
+
+        if (!isValidMembershipLevel(membershipLevel)) {
+            System.out.println("Invalid membership level. Please enter Gold, Platinum, or Diamond.");
+        }
+    } while (!isValidMembershipLevel(membershipLevel));
+    
+    // Date of Joining
+    do {
+        System.out.print("Enter Date of Joining (yyyy-MM-dd): ");
+        dateOfJoining = scanner.nextLine().trim();
+
+        expiryDate = calculateExpiryDate(baseDate);
+
+        if (expiryDate == null) {
+            System.out.println("Invalid date of joining.");
+            System.out.println("Please use yyyy-MM-dd.");
+        }
+    } while (expiryDate == null);
+    
+    // Membership Status
+    do {
+        System.out.print("Enter Membership Status (Active/Inactive): ");
+        membershipStatus = scanner.nextLine().trim();
+
+        if (!isValidMembershipStatus(membershipStatus)) {
+            System.out.println("Invalid membership status. Please enter Active or Inactive.");
+        }
+
+    } while (!isValidMembershipStatus(membershipStatus));
+    
+     // Registration Fee
+    double registrationFee = getRegistrationFee(membershipLevel);
+        
+        
     }
     
     
@@ -87,21 +184,6 @@ public class MemberManagement {
        }else{
            return 0.0;
        }  
-    }
-
-   // ==========================================
-    // +++++++  GET EXPIRY DATE ++++++++ -DC
-   // ==========================================
-    public String calculateExpiryDate(String joinOrRenewDate) {
-        try{ //prevet occur error when user is input invalid date format.
-            
-            LocalDate date = LocalDate.parse(joinOrRenewDate);
-            String expiryDate = date.plusYears(1).toString(); //expiry date = baseDate(joinOrRenewDate) + 1 year
-            return expiryDate;
-        }catch(DateTimeParseException e){
-            return null;
-        }
-    
     }
 
    // ==========================================
