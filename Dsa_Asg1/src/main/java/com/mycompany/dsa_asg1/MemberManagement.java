@@ -10,7 +10,7 @@ import java.time.Period;
 import java.time.format.DateTimeParseException;
 
 public class MemberManagement {
-    private Scanner scanner;
+    private Scanner scanner = new Scanner(System.in);
     private LinkedList<Member> memberList = new LinkedList<>();
     
     // Add member
@@ -44,31 +44,69 @@ public class MemberManagement {
             }
             
         } while (memberId.isEmpty() || duplicate);
-    
-    
-    
+
     }
     
     
-    // Validation method
     
-//FEE AND EXPIRY DATE
-    //getRegistrationFee() , calculateExpiryDate()
+    
+    
+    
+    
+    
+    
+   // Validation method
+    
+//FEE AND EXPIRY DATE - helper method
+    //getRegistrationFee(String membershipLevel) , calculateExpiryDate(String joinOrRenewDate)
  //SEARCH
     //searchMemberById(String memberId) 
     //searchMembersByMembershipLevel(String membershipLevel)
     //searchMembersByMembershipStatus(String membershipStatus)
 // VALIDATION
-    //isDuplicateMemberId(String memberId)
-    //isValidGender(String gender)
-    //isValidContactNumber(String contactNumber)
-    //isValidMembershipLevel(String membershipLevel)
-    //isValidMembershipStatus(String membershipStatus)
-    //isValidAddress(String address)
-    //calculateAge(String dateOfBirth)
+    //isDuplicateMemberId(String memberId) -Done
+    //isValidGender(String gender) -Done
+    //isValidContactNumber(String contactNumber) -Done
+    //isValidMembershipLevel(String membershipLevel) -Done
+    //isValidMembershipStatus(String membershipStatus) -Done
+    //isValidAddress(String address) -Done
+    //calculateAge(String dateOfBirth) -Done
 
     
+   // ==========================================
+    // +++++++  GET REGISTER FEE ++++++++ -DC
+   // ==========================================
+    public double getRegistrationFee(String membershipLevel) {
+        
+       if(membershipLevel.equalsIgnoreCase("Gold")){
+           return 180.0;
+       }else if(membershipLevel.equalsIgnoreCase("Platinum")) {
+           return 220.0;
+       }else if(membershipLevel.equalsIgnoreCase("Diamond")){
+           return 300.0;
+       }else{
+           return 0.0;
+       }  
+    }
+
+   // ==========================================
+    // +++++++  GET EXPIRY DATE ++++++++ -DC
+   // ==========================================
+    public String calculateExpiryDate(String joinOrRenewDate) {
+        try{ //prevet occur error when user is input invalid date format.
+            
+            LocalDate date = LocalDate.parse(joinOrRenewDate);
+            String expiryDate = date.plusYears(1).toString(); //expiry date = baseDate(joinOrRenewDate) + 1 year
+            return expiryDate;
+        }catch(DateTimeParseException e){
+            return null;
+        }
     
+    }
+
+   // ==========================================
+    // +++++++  VALIDATION METHOD ++++++++ -DC
+   // ==========================================
     public boolean isDuplicateMemberId(String memberId) {
         for (Member member : memberList) {
             if (member.getMemberId().equalsIgnoreCase(memberId)) {
@@ -85,14 +123,29 @@ public class MemberManagement {
     
     public boolean isValidContactNumber(String contactNumber) {
         contactNumber = contactNumber.trim();
-        // Malaysia Mobile Format - 0123456789 / 012-3456789 
-        // Malaysia Landline Format - 03-12345678 / 082-123456
+        contactNumber = contactNumber.replace(" ", "");
         
-        String mobileWithoutDash = "^(01[0-9])[0-9]{7,8}$";
-        String mobileWithDash = "^(01[0-9])-[0-9]{7,8}$";
-        String landlineWithDash = "^(0[3-9])-[0-9]{6,8}$";
-        
-        return contactNumber.matches(mobileWithoutDash) || contactNumber.matches(mobileWithDash) || contactNumber.matches(landlineWithDash);
+        //Mobile Format  0123456789, 0137654321
+       String mobileWithoutDash10 = "^01[02346789][0-9]{7}$";
+       String mobileWithoutDash11 = "^011[0-9]{8}$";
+       String mobileWithDash10 = "^01[02346789]-[0-9]{7}$";
+       String mobileWithDash11 = "^011-[0-9]{8}$";
+       
+       //Landline Format 
+       String landlineWithoutDash2DigitArea = "^0[345679][0-9]{7,8}$"; // 2-digit area code examples: 03-12345678, 04-1234567
+       String landlineWithDash2DigitArea = "^0[345679]-[0-9]{7,8}$";
+       String landlineWithoutDash3DigitArea = "^08[2-9][0-9]{6}$";  // 3-digit area code examples: 082 123456, 088 123456
+       String landlineWithDash3DigitArea = "^08[2-9]-[0-9]{6}$";
+       
+       return contactNumber.matches(mobileWithoutDash10)
+            || contactNumber.matches(mobileWithoutDash11)
+            || contactNumber.matches(mobileWithDash10)
+            || contactNumber.matches(mobileWithDash11)
+            || contactNumber.matches(landlineWithoutDash2DigitArea)
+            || contactNumber.matches(landlineWithDash2DigitArea)
+            || contactNumber.matches(landlineWithoutDash3DigitArea)
+            || contactNumber.matches(landlineWithDash3DigitArea);
+       
     }
     
     public boolean isValidMembershipLevel(String membershipLevel) {
@@ -109,13 +162,13 @@ public class MemberManagement {
     
     public int calculateAge(String dateOfBirth) {
         try {
-            LocalDate dob = LocalDate.parse(dateOfBirth);
+            LocalDate dob = LocalDate.parse(dateOfBirth); //[ yyyy-mm-dd ] format
             LocalDate today = LocalDate.now();
             
             if (dob.isAfter(today)) {
                 return -1;
             }
-            return Period.between(dob, today).getYears();
+            return Period.between(dob, today).getYears(); // Calculated year exp: dob = 2000-05-20 - today = 2026-03-09 = 25year 9month 17days
             
         } catch (DateTimeParseException e) {
             return -1;
