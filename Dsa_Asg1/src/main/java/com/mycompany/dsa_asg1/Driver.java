@@ -1,8 +1,6 @@
 package com.mycompany.dsa_asg1;
 
 	import java.util.Scanner;
-	import java.util.List;
-	import java.util.LinkedList;
 	import com.mycompany.dsa_asg1.Member;
 
 	public class Driver {
