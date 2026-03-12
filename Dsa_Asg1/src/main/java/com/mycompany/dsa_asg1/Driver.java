@@ -97,7 +97,7 @@ package com.mycompany.dsa_asg1;
 			}
 			
 			// formating
-			public void displayMemberDetails (Member member) {
+			public void displayMembersDetails (Member member) {
 				if (member == null) {
 					System.out.println("Error: Member not found. ");
 				}else {
