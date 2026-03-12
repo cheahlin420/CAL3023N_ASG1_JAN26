@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
+import java.io.*;
 
 public class MemberManagement {
     private Scanner scanner = new Scanner(System.in);
@@ -44,7 +45,9 @@ public class MemberManagement {
             }
             
         } while (memberId.isEmpty() || duplicate);
+        
 
+        
     }
     
     
@@ -88,21 +91,17 @@ public class MemberManagement {
            return 0.0;
        }  
     }
-
-   // ==========================================
-    // +++++++  GET EXPIRY DATE ++++++++ -DC
-   // ==========================================
-    public String calculateExpiryDate(String joinOrRenewDate) {
-        try{ //prevet occur error when user is input invalid date format.
-            
-            LocalDate date = LocalDate.parse(joinOrRenewDate);
-            String expiryDate = date.plusYears(1).toString(); //expiry date = baseDate(joinOrRenewDate) + 1 year
-            return expiryDate;
-        }catch(DateTimeParseException e){
-            return null;
-        }
     
-    }
+	public double getRenewalFee(String membershipLevel) {
+		if(membershipLevel.equalsIgnoreCase("Gold")) {
+			return 80.0;
+		}else if(membershipLevel.equalsIgnoreCase("Platinum")) {
+			return 110.0;
+		}else if(membershipLevel.equalsIgnoreCase("Diamond")) {
+			return 150.0;
+		}
+		return 0;//default
+	}
 
    // ==========================================
     // +++++++  VALIDATION METHOD ++++++++ -DC
@@ -174,32 +173,47 @@ public class MemberManagement {
             return -1;
         }
     }
+    /* SUKI
+     * 1. Search
+     * searchMemberById
+     * 
+     * 2. Renew
+     * calculateExpiryDate(String baseDate)
+     * renewMembership(String memberId)
+     * 
+     * 3. Update
+     * updateContactNumber(String memberId,String newContactNumber)
+     * updateAddress(String memberId,String address)
+     * updateMembershipLevel(String memberId,String level)
+     * cancelMembership(String memberId)
+     * 
+     * 4. Delete
+     * deleteMember(String memberId)
+     * 
+     * 5. Text file(Storage)
+     * saveToFile()
+     * loadFromFile()
+     * 
+     * 6. Testing
+     */
     
-
-    public int getRegistrationFee(String membershipLevel){
-		if(membershipLevel.equalsIgnoreCase("Gold")) {
-			return 180;
-		}else if(membershipLevel.equalsIgnoreCase("Platinum")) {
-			return 220;
-		}else if(membershipLevel.equalsIgnoreCase("Diamond")) {
-			return 300;
-		}
-		return 0;//default
-	}
 	
-	public int getRenewalFee(String membershipLevel) {
-		if(membershipLevel.equalsIgnoreCase("Gold")) {
-			return 80;
-		}else if(membershipLevel.equalsIgnoreCase("Platinum")) {
-			return 110;
-		}else if(membershipLevel.equalsIgnoreCase("Diamond")) {
-			return 150;
-		}
-		return 0;//default
-	}
+    public Member searchMemberById(String memberId){
+    	for(int i =0;i<memberList.size();i++) {
+    		Member m=memberList.get(i);
+    		if(m.getMemberId().equals(memberId)) {
+    			return m;
+    		}
+    	}
+    	return null;
+    }
+	
 	
 	public String calculateExpiryDate(String baseDate) {
-		
+		//if(!isValidDate(baseDate)) {
+		//	return;
+		//}
+		//format = dd-mm-yyyy
 		// 1. Use "-" to split the string into three parts(Array List):
 		// parts[0] is date, parts[1] is month, parts[2] is year.
 		String[] parts = baseDate.split("-"); 
@@ -227,7 +241,7 @@ public class MemberManagement {
 		Member target = searchMemberById(memberId);
 		
 		String level;
-		int fee;
+		double fee;
 		if(target==null) {
 			System.out.println("Member is not found");
 			return;
@@ -240,7 +254,7 @@ public class MemberManagement {
 		String newDate=calculateExpiryDate(oldDate);
 		target.setExpiryDate(newDate);
 		
-		target.setMembershipstatus("Active");
+		target.setMembershipStatus("Active");
 		
 		System.out.println("Renewal Successful");
 		System.out.println("Member ID: " + target.getMemberId());
@@ -255,6 +269,7 @@ public class MemberManagement {
 
 		if(target==null) {
 			System.out.println("Member is not found");
+			return;
 		}else {
 			if (isValidContactNumber(newContactNumber)) { 
 	            target.setContactNumber(newContactNumber);
@@ -271,6 +286,7 @@ public class MemberManagement {
 
 		if(target==null) {
 			System.out.println("Member is not found");
+			return;
 		}else {
 			if (isValidAddress(address)) { 
 				target.setAddress(address);
@@ -287,6 +303,7 @@ public class MemberManagement {
 
 		if(target==null) {
 			System.out.println("Member is not found");
+			return;
 		}else {
 			if (isValidMembershipLevel(level)) { 
 				target.setMembershipLevel(level);
@@ -309,18 +326,81 @@ public class MemberManagement {
 		}
 	}
 	
+	
 	public void deleteMember(String memberId) {
 		
 		Member target = searchMemberById(memberId);//Find the member (by Member ID).
 	    
 		if(target==null) {
 			System.out.println("Member is not found");
+			return;
 		}else {
 			memberList.remove(target);
 			System.out.println("Member has been completely deleted!");
 		}
 
 	}
+	
+	//Text file persistent storage
+	public void saveToFile() {
+	    try {
+	        // 1. write text into "members.txt".
+	        PrintWriter writer = new PrintWriter(new FileWriter("members.txt"));
+	        
+	        // 2. Call out everyone on the member list one by one.
+	        for (int i = 0; i < memberList.size(); i++) {
+	        	
+	        	Member m = memberList.get(i);
+	        	
+	            // 3. Store each member's the data into record
+	            String record = m.getMemberId() + ";" + m.getName() + ";" + m.getDateOfBirth() + ";" +m.getAge() + ";" + 
+	            m.getGender() + ";" + m.getContactNumber() + ";" + m.getAddress() + ";" + m.getMembershipLevel() + ";" +
+	            m.getDateOfJoining() + ";" + m.getMembershipStatus() + ";" + m.getExpiryDate();
+	            
+	            // 4. write this string of text into a file and add a newline character (println):
+	            writer.println(record); 
+	        }
+	        
+	        writer.close(); 
+	        System.out.println("Store the data into members.txt successfully!");
+	        
+	    } catch (Exception e) {
+	        System.out.println("Store unsuccessful：" + e.getMessage());
+	    }
+	}
+	
+	public void loadFromFile(){
+		
+		try {
+			File file = new File("members.txt");
+			
+			// If the file doesn't exist at all (e.g., the first time using the system)
+			// then do nothing and just end the process.
+			if (!file.exists()) 
+	            return;
+			
+			//2. use scanner to read the text in the document
+			Scanner fileScanner = new Scanner(file);
+			
+			//3. Keep reading as long as there is another line in the file
+			while(fileScanner.hasNextLine()) {
+				String line = fileScanner.nextLine();
+				
+				String[] data =line.split(";");
+				if(data.length == 11) {
+					Member m = new Member (data[0],data[1],data[2],Integer.parseInt(data[3]),data[4],
+							data[5],data[6],data[7],data[8],data[9],data[10]);
+					memberList.add(m);
+				}	
+			}
+			
+			fileScanner.close();
+	        System.out.println("Load data successfully!");
+	        
+		}catch (Exception e) {
+	        System.out.println("Load unsuccessful：" + e.getMessage());
+	    }
+	}
     
-    
+	
 }
