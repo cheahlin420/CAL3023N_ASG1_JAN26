@@ -279,7 +279,7 @@ public class MemberManagement {
     public Member searchMemberById(String memberId){
     	for(int i =0;i<memberList.size();i++) {
     		Member m=memberList.get(i);
-    		if(m.getMemberId().equals(memberId)) {
+    		if(m.getMemberId().equalsIgnoreCase(memberId)) {
     			return m;
     		}
     	}
@@ -447,19 +447,39 @@ public class MemberManagement {
         if (month < 1 || month > 12) {
             return false;
         }
+
+    // Check valid day
+    if (day < 1) {
+        return false;
     }
     
-
-    public int getRegistrationFee(String membershipLevel){
-		if(membershipLevel.equalsIgnoreCase("Gold")) {
-			return 180;
-		}else if(membershipLevel.equalsIgnoreCase("Platinum")) {
-			return 220;
-		}else if(membershipLevel.equalsIgnoreCase("Diamond")) {
-			return 300;
-		}
-		return 0;//default
-	}
+    int maxDay;
+    
+    switch (month) {
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            maxDay = 31;
+            break;
+        case 4: case 6: case 9: case 11:
+            maxDay = 30;
+            break;
+        case 2:
+            if (isLeapYear(year)) {
+                maxDay = 29;
+            } else {
+                maxDay = 28;
+            }
+            break;
+        default:
+            return false;
+    }
+    return day <= maxDay;
+    }
+    
+        // Checking year
+    public boolean isLeapYear(int year) {
+        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+    }
+    
 	
 	public int getRenewalFee(String membershipLevel) {
 		if(membershipLevel.equalsIgnoreCase("Gold")) {
@@ -666,40 +686,43 @@ public class MemberManagement {
 	        System.out.println("Load unsuccessful：" + e.getMessage());
 	    }
 	}
-	
-	public void viewAllMembers() {
-	  List<Member> list = manager.getMemberList();
-	  if (list.isEmpty()) {
-	     System.out.println("No members in system.");
-	     return;
-	
-	}
-	
-	     System.out.printf("\n%-15s %-20s %-15s %-10s\n", "ID", "Name", "Membership Level", "Membership Status" );
-	     System.out.println("-----------------------------------------------------------------------------------");
-	         for (Member m : list) {
-	         System.out.printf("%-15s %-20s %-15s %-10s\n" , m.getMemberId(), m.getMemberList(), m.getMembershipLevel, m.getMembershipStatus());
-	 
-	 }
-	}
-	
-	public void viewMembersByStatus (String status) {
-	   for (Member m : manager.getMemberList()) {
-	        if (m.getMembershipStatus(). equalsIgnoreCase(status)) {
-            	displayMemberDetails(m);
-	
-	  }
-	 }
-	}
-	
-	public void viewMembersByLevel (String level) {
-	   for (Member m : manager.getMemberList()) {
-	        if (m.getMembershipLevel(). equalsIgnoreCase(level)){
-	            displayMemberDetails(m);
-	 
-	  }
-	 }
-	}
+        
+        
+        public void viewAllMembers() {
+            
+            if (memberList.isEmpty()) {
+                System.out.println("No members in system.");
+                return;
+            }
+            
+            System.out.printf("\n%-15s %-20s %-18s %-18s\n", "ID", "Name", "Membership Level", "Membership Status" );
+            System.out.println("-----------------------------------------------------------------------------------");
+            
+            for (Member m : memberList) {
+                System.out.printf("%-15s %-20s %-15s %-10s\n" , m.getMemberId(), m.getName(), m.getMembershipLevel(), m.getMembershipStatus());
+            }
+        }
+        
+        
+        
+        // Delete
+//	public void viewMembersByStatus (String status) {
+//	   for (Member m : manager.getMemberList()) {
+//	        if (m.getMembershipStatus(). equalsIgnoreCase(status)) {
+//            	displayMemberDetails(m);
+//	
+//	  }
+//	 }
+//	}
+//	
+//	public void viewMembersByLevel (String level) {
+//	   for (Member m : manager.getMemberList()) {
+//	        if (m.getMembershipLevel(). equalsIgnoreCase(level)){
+//	            displayMemberDetails(m);
+//	 
+//	  }
+//	 }
+//	}
 
     
 	

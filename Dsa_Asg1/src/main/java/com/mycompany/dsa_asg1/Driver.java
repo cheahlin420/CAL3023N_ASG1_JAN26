@@ -1,7 +1,6 @@
 package com.mycompany.dsa_asg1;
 
 	import java.util.Scanner;
-	import com.mycompany.dsa_asg1.Member;
 
 	public class Driver {
 		private Scanner input = new Scanner (System.in);
@@ -76,13 +75,13 @@ package com.mycompany.dsa_asg1;
 				case 2:
 					System.out.print("Enter Member ID: ");
 					String memID = input.nextLine();
-					displayMembersDetails(manager.searchMemberById(memID));// call A
+					displayMemberDetails(manager.searchMemberById(memID));// call A
 					break;
 					
 				case 3:
 					System.out.println("Enter Member ID to update: ");
 					String updateMem = input.nextLine();
-					manager.updateMemberInformation(updateMem);// call B
+					// manager.updateMemberInformation(updateMem);// call B - need to confirm with suki
 					break;
 					
 				case 4:
@@ -102,13 +101,13 @@ package com.mycompany.dsa_asg1;
 					break;
 				
 				case 7:
-					System.out.println("Enter Membership Satus: ");
-					manager.searchMembersByMembershipStatus(input.nextLine());
+					System.out.println("Enter Membership Status: ");
+					manager.searchMembersByMembershipStatus(input.nextLine().trim());
 					break;
 					
 				case 8:
 					System.out.println("Enter Membership Level: ");
-					manager.searchMembersByMembershipLevel(input.nextLine());
+					manager.searchMembersByMembershipLevel(input.nextLine().trim());
 					break;
 					
 				case 0:
@@ -122,7 +121,7 @@ package com.mycompany.dsa_asg1;
 			}
 			
 			// formating
-			public void displayMembersDetails (Member member) {
+			public void displayMemberDetails (Member member) {
 				if (member == null) {
 					System.out.println("Error: Member not found. ");
 				}else {
