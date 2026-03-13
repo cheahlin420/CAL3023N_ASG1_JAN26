@@ -4,6 +4,7 @@
  */
 package com.mycompany.dsa_asg1;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.Period;
@@ -401,6 +402,41 @@ public class MemberManagement {
 	        System.out.println("Load unsuccessful：" + e.getMessage());
 	    }
 	}
+	
+	public void viewAllMembers() {
+	  List<Member> list = manager.getMemberList();
+	  if (list.isEmpty()) {
+	     System.out.println("No members in system.");
+	     return;
+	
+	}
+	
+	     System.out.printf("\n%-15s %-20s %-15s %-10s\n", "ID", "Name", "Membership Level", "Membership Status" );
+	     System.out.println("-----------------------------------------------------------------------------------");
+	         for (Member m : list) {
+	         System.out.printf("%-15s %-20s %-15s %-10s\n" , m.getMemberId(), m.getMemberList(), m.getMembershipLevel, m.getMembershipStatus());
+	 
+	 }
+	}
+	
+	public void viewMembersByStatus (String status) {
+	   for (Member m : manager.getMemberList()) {
+	        if (m.getMembershipStatus(). equalsIgnoreCase(status)) {
+            	displayMemberDetails(m);
+	
+	  }
+	 }
+	}
+	
+	public void viewMembersByLevel (String level) {
+	   for (Member m : manager.getMemberList()) {
+	        if (m.getMembershipLevel(). equalsIgnoreCase(level)){
+	            displayMemberDetails(m);
+	 
+	  }
+	 }
+	}
+
     
 	
 }
