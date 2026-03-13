@@ -11,7 +11,7 @@ package com.mycompany.dsa_asg1;
 			Driver program = new Driver();
 			program.showMainMenu();
 			
-			//        Member m1 = new Member("M0001", "Alice Tan", "20-04-2004", 21,
+//        Member m1 = new Member("M0001", "Alice Tan", "20-04-2004", 21,
 //                "Female", "012-3456789", "Bukit Mertajam", "Gold",
 //                "10-03-2024", "Active", "10-03-2026");
 //
