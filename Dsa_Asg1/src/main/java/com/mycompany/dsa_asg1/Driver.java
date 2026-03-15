@@ -327,7 +327,7 @@ package com.mycompany.dsa_asg1;
                                 
                                 if(choice.equalsIgnoreCase("Y")){
                                     return true;
-                                }else if(choice.equalsIgnoreCase("Y")) {
+                                }else if(choice.equalsIgnoreCase("N")) {
                                     return false;
                                 }else{
                                     System.out.println("Invalid input. Please enter Y or N only...");
