@@ -754,8 +754,8 @@ public class MemberManagement {
 				
 				String[] data =line.split(";");
 				if(data.length == 11) {
-					Member m = new Member (data[0],data[1],data[2],Integer.parseInt(data[3]),data[4],
-							data[5],data[6],data[7],data[8],data[9],data[10]);
+					Member m = new Member (data[0].toUpperCase(), data[1].toUpperCase(), data[2], Integer.parseInt(data[3]), data[4].toUpperCase(),
+					        data[5], data[6].toUpperCase(), data[7].toUpperCase(), data[8], data[9].toUpperCase(), data[10]);
 					memberList.add(m);
 				}	
 			}
