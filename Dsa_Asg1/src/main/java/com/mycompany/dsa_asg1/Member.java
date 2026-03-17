@@ -128,7 +128,6 @@ public class Member {
         return expiryDate;
     }
 
-    @Override
     public String toString() {
     return "Member ID: " + memberId +
            "\nName: " + name +
@@ -141,7 +140,7 @@ public class Member {
            "\nDate of Joining: " + dateOfJoining +
            "\nMembership Status: " + membershipStatus +
            "\nExpiry Date: " + expiryDate;
-}
+    }
 
     
     
