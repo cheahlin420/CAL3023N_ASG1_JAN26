@@ -22,7 +22,7 @@ public class Member {
     
     // no-argumentt constructure
     public Member() {
-        this("", "", "", 1, "", "", "", "Gold", "", "Inactive", "");
+        this("", "", "", 0, "", "", "", "", "", "", "");
     }
     
     // full constructure
